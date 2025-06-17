@@ -1,0 +1,4 @@
+name: IncreaseSpeedPlugin
+version: '1.0-SNAPSHOT'
+main: org.plugins.minevidencia.IncreaseSpeedPlugin
+api-version: '1.21'
