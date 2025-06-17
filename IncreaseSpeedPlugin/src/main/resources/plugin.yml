@@ -2,3 +2,9 @@ name: IncreaseSpeedPlugin
 version: '1.0-SNAPSHOT'
 main: org.plugins.minevidencia.IncreaseSpeedPlugin
 api-version: '1.21'
+
+
+commands:
+  potion:
+    description: Aplica efeito de velocidade ao jogador
+    usage: /speed [level]
