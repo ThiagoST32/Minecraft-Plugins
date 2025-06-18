@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.plugins.minevidencia.Exceptions.InvalidCommandParameters;
 import org.plugins.minevidencia.Listerners.MessageOnApplyCommand;
 
 public class ApplySpeedEffect {
@@ -15,16 +16,24 @@ public class ApplySpeedEffect {
     }
 
     public PotionEffect execute(String @NotNull [] args, CommandSender commandSender) {
-        speedIncrease = Integer.parseInt(args[0]);
+        try {
+            if (args.length == 0) {
+                this.message.onCommandApplyErrorIndexOutBound(commandSender);
+                throw new InvalidCommandParameters();
+            }
+            speedIncrease = Integer.parseInt(args[0]);
 
-        PotionEffect potionEffect = new PotionEffect(
-                PotionEffectType.SPEED,
-                PotionEffect.INFINITE_DURATION,
-                speedIncrease,
-                true,
-                true
-        );
-        this.message.onCommandApplySuccess(commandSender);
-        return potionEffect;
+            PotionEffect potionEffect = new PotionEffect(
+                    PotionEffectType.SPEED,
+                    PotionEffect.INFINITE_DURATION,
+                    speedIncrease,
+                    true,
+                    true
+            );
+            this.message.onCommandApplySuccess(commandSender);
+            return potionEffect;
+        } catch (InvalidCommandParameters e) {
+            throw new InvalidCommandParameters();
+        }
     }
 }
