@@ -14,8 +14,8 @@ public class ApplySpeedEffect {
         this.message = message;
     }
 
-    public PotionEffect execute(String @NotNull [] args, CommandSender commandSender) {
-        speedIncrease = Integer.parseInt(args[0]);
+    public PotionEffect execute(String args, CommandSender commandSender) {
+        speedIncrease = Integer.parseInt(args);
 
         PotionEffect potionEffect = new PotionEffect(
                 PotionEffectType.SPEED,

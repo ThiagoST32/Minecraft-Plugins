@@ -6,6 +6,6 @@ public class VerifyIncreaseSpeed {
     }
 
     public boolean isValidSpeedIncrease(int speedIncrease) {
-        return speedIncrease <= 4 && speedIncrease > 0;
+        return speedIncrease <= 4 && speedIncrease >= 0;
     }
 }
