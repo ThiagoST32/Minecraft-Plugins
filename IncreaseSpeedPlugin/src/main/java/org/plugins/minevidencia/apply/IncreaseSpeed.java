@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.plugins.minevidencia.Effects.ApplySpeedEffect;
-import org.plugins.minevidencia.Exceptions.InvalidCommandZeroArgs;
 import org.plugins.minevidencia.Listerners.MessageOnApplyCommand;
 
 public class IncreaseSpeed implements CommandExecutor {
@@ -28,7 +27,7 @@ public class IncreaseSpeed implements CommandExecutor {
             Player player = (Player) sender;
 
             if (args.length == 0){
-                this.message.onCommandApplyErrorIndexOutBound(sender);
+                this.message.onCommandApplyError(sender);
                 return false;
             }
 
@@ -49,8 +48,9 @@ public class IncreaseSpeed implements CommandExecutor {
             player.addPotionEffect(this.applySpeedEffect.execute(args, sender));
 
             return true;
-        } catch (InvalidCommandZeroArgs e) {
-            throw new InvalidCommandZeroArgs();
+        } catch (NumberFormatException e) {
+            this.message.onCommandApplyError(sender);
         }
+        return false;
     }
 }

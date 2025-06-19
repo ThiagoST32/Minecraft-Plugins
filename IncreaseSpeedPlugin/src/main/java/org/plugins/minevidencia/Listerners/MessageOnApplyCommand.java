@@ -1,7 +1,6 @@
 package org.plugins.minevidencia.Listerners;
 
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 public class MessageOnApplyCommand {
 
@@ -18,6 +17,6 @@ public class MessageOnApplyCommand {
     }
 
     public void onCommandApplyErrorIndexOutBound(CommandSender event) {
-        event.sendMessage("O comando não foi aplicado. Por favor forneça um valor de 0 a 4");
+        event.sendMessage("O comando não foi aplicado. Verifique se você digitou o comando corretamente e se o índice está dentro do intervalo permitido.");
     }
 }
