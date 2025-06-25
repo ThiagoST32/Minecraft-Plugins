@@ -6,8 +6,6 @@ import org.plugins.minevidencia.Listerners.MessageOnApplyCommand;
 import org.plugins.minevidencia.apply.IncreaseSpeed;
 import org.plugins.minevidencia.apply.VerifyIncreaseSpeed;
 
-import java.util.Objects;
-
 public final class IncreaseSpeedPlugin extends JavaPlugin {
     @Override
     public void onEnable() {

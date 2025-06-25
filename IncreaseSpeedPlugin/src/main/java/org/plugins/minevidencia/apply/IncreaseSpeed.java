@@ -34,29 +34,35 @@ public class IncreaseSpeed implements CommandExecutor {
                     sender.sendMessage("Apenas jogadores podem usar esse comando!");
                     return false;
                 }
-                Player player = (Player) sender;
-                if (Integer.parseInt(args[0]) == 0) {
-                    player.removePotionEffect(PotionEffectType.SPEED);
-                    this.message.onCommandApply(sender);
-                    return true;
+                Player player = sender.getServer().getPlayer(sender.getName());
+                if (player != null){
+                    if (Integer.parseInt(args[0]) == 0) {
+                        player.removePotionEffect(PotionEffectType.SPEED);
+                        this.message.onCommandApply(sender);
+                        return true;
+                    }
+                    if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[0]))) {
+                        this.message.onCommandApplyErrorIndexOutBound(sender);
+                        return false;
+                    }
+                    return player.addPotionEffect(this.applySpeedEffect.execute(args[0], sender));
                 }
-                if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[0]))) {
-                    this.message.onCommandApplyErrorIndexOutBound(sender);
-                    return false;
-                }
-                return player.addPotionEffect(this.applySpeedEffect.execute(args[0], sender));
             }
 
             if (args.length == 2 || sender instanceof ConsoleCommandSender) {
                 for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     if (onlinePlayer.isOnline() && onlinePlayer.getName().equals(args[0])) {
-                        if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[1]))) return false;
+                        if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[1]))) {
+                            this.message.onCommandApplyErrorIndexOutBound(sender);
+                            return false;
+                        }
                         if (args[1].equals("0")) {
                             onlinePlayer.removePotionEffect(PotionEffectType.SPEED);
                             return true;
                         }
                         return onlinePlayer.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
                     }
+                    this.message.onCommandApplyOnPlayerOff(sender);
                 }
             }
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException e) {
