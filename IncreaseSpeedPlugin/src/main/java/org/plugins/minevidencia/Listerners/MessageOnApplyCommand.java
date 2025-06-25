@@ -19,4 +19,8 @@ public class MessageOnApplyCommand {
     public void onCommandApplyErrorIndexOutBound(CommandSender event) {
         event.sendMessage("O comando não foi aplicado. Verifique se você digitou o comando corretamente e se o índice está dentro do intervalo permitido.");
     }
+
+    public void onCommandApplyOnPlayerOff(CommandSender event){
+        event.sendMessage("O comando não foi apicado. O jogador especificado não está online!");
+    }
 }

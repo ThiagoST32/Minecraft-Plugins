@@ -6,15 +6,16 @@ import org.plugins.minevidencia.Listerners.MessageOnApplyCommand;
 import org.plugins.minevidencia.apply.IncreaseSpeed;
 import org.plugins.minevidencia.apply.VerifyIncreaseSpeed;
 
+import java.util.Objects;
+
 public final class IncreaseSpeedPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         MessageOnApplyCommand message = new MessageOnApplyCommand();
         VerifyIncreaseSpeed verifyIncreaseSpeed = new VerifyIncreaseSpeed();
         ApplySpeedEffect applySpeedEffect = new ApplySpeedEffect(message);
-
         getLogger().info("Plugin de comando iniciado!");
-        getCommand("speed").setExecutor(new IncreaseSpeed(message, verifyIncreaseSpeed, applySpeedEffect));
+        Objects.requireNonNull(getCommand("speed")).setExecutor(new IncreaseSpeed(message, verifyIncreaseSpeed, applySpeedEffect));
     }
 
     @Override

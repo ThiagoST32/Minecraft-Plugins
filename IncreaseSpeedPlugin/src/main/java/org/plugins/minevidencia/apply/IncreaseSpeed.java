@@ -3,20 +3,17 @@ package org.plugins.minevidencia.apply;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.plugins.minevidencia.Effects.ApplySpeedEffect;
 import org.plugins.minevidencia.Listerners.MessageOnApplyCommand;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 public class IncreaseSpeed implements CommandExecutor {
-    private final VerifyIncreaseSpeed verifyIncreaseSpeed;
     private final MessageOnApplyCommand message;
+    private final VerifyIncreaseSpeed verifyIncreaseSpeed;
     private final ApplySpeedEffect applySpeedEffect;
-    int speedIncrease;
 
     public IncreaseSpeed(MessageOnApplyCommand message, VerifyIncreaseSpeed verifyIncreaseSpeed, ApplySpeedEffect applySpeedEffect) {
         this.message = message;
@@ -26,47 +23,46 @@ public class IncreaseSpeed implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        try {
-            Player player = (Player) sender;
+        Player player = (Player) sender;
 
-            if (args[0].isEmpty()){
+        try {
+
+            if (args[0].isEmpty()) {
                 this.message.onCommandApplyError(sender);
                 return false;
             }
 
-            if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(speedIncrease)) {
+            if (Integer.parseInt(args[0]) == 0) {
+                player.removePotionEffect(PotionEffectType.SPEED);
+                this.message.onCommandApply(sender);
+                return false;
+            }
+
+            if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[0]))) {
                 this.message.onCommandApplyErrorIndexOutBound(sender);
                 return false;
             }
 
-            if (!args[0].equals(Integer.toString(speedIncrease))) {
-                for (Player onlinePlayer : player.getServer().getOnlinePlayers()){
-                    if (args[0].equals(onlinePlayer.getName())) {
-                        Arrays.stream(args)
-                                .filter(p -> Objects.requireNonNull(onlinePlayer.getServer().getPlayer(args[0])).isOnline());
-                        player.removePotionEffect(PotionEffectType.SPEED);
-                        player.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
-                        return true;
-                    }
-                    return false;
-                }
-            }
+            if (args.length == 1 && Integer.parseInt(args[0]) != 0) return player.addPotionEffect(this.applySpeedEffect.execute(args[0], sender));
 
-            speedIncrease = Integer.parseInt(args[0]);
+            if (args.length == 2) return this.applySpeedEffectOnOtherPlayer(sender, args);
 
-            if (speedIncrease == 0){
-                player.removePotionEffect(PotionEffectType.SPEED);
-                this.message.onCommandApply(sender);
-                return true;
-            }
+            if (sender instanceof ConsoleCommandSender) return this.applySpeedEffectOnOtherPlayer(sender, args);
 
-            player.removePotionEffect(PotionEffectType.SPEED);
-            player.addPotionEffect(this.applySpeedEffect.execute(args[0], sender));
-
-            return true;
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException e) {
             this.message.onCommandApplyError(sender);
         }
         return false;
+    }
+
+    private boolean applySpeedEffectOnOtherPlayer(@NotNull CommandSender sender, @NotNull String @NotNull [] args) {
+        Player player = (Player) sender;
+        for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+            if (onlinePlayer.isOnline() && onlinePlayer.getName().equals(args[0])) {
+                return player.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
+            }
+        }
+        this.message.onCommandApplyOnPlayerOff(sender);
+        return true;
     }
 }
