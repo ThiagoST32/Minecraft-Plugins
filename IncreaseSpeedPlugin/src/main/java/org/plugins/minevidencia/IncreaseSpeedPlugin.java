@@ -15,7 +15,7 @@ public final class IncreaseSpeedPlugin extends JavaPlugin {
         VerifyIncreaseSpeed verifyIncreaseSpeed = new VerifyIncreaseSpeed();
         ApplySpeedEffect applySpeedEffect = new ApplySpeedEffect(message);
         getLogger().info("Plugin de comando iniciado!");
-        Objects.requireNonNull(getCommand("speed")).setExecutor(new IncreaseSpeed(message, verifyIncreaseSpeed, applySpeedEffect));
+        getCommand("speed").setExecutor(new IncreaseSpeed(message, verifyIncreaseSpeed, applySpeedEffect));
     }
 
     @Override

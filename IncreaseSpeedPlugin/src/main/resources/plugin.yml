@@ -7,4 +7,5 @@ api-version: '1.21'
 commands:
   speed:
     description: Aplica efeito de velocidade ao jogador
-    usage: /<speed> [0 - 4]
+    usage: /<speed> [player] <nível>
+    default: true
