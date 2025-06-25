@@ -23,7 +23,6 @@ public class IncreaseSpeed implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        Player player = (Player) sender;
         try {
             if (args[0].isEmpty()) {
                 this.message.onCommandApplyError(sender);
@@ -35,10 +34,11 @@ public class IncreaseSpeed implements CommandExecutor {
                     sender.sendMessage("Apenas jogadores podem usar esse comando!");
                     return false;
                 }
+                Player player = (Player) sender;
                 if (Integer.parseInt(args[0]) == 0) {
                     player.removePotionEffect(PotionEffectType.SPEED);
                     this.message.onCommandApply(sender);
-                    return false;
+                    return true;
                 }
                 if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[0]))) {
                     this.message.onCommandApplyErrorIndexOutBound(sender);
@@ -47,32 +47,18 @@ public class IncreaseSpeed implements CommandExecutor {
                 return player.addPotionEffect(this.applySpeedEffect.execute(args[0], sender));
             }
 
-            if (args.length == 2) {
-                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
+            if (args.length == 2 || sender instanceof ConsoleCommandSender) {
+                for (Player onlinePlayer : sender.getServer().getOnlinePlayers()) {
                     if (onlinePlayer.isOnline() && onlinePlayer.getName().equals(args[0])) {
+                        if (!this.verifyIncreaseSpeed.isValidSpeedIncrease(Integer.parseInt(args[1]))) return false;
                         if (args[1].equals("0")) {
-                            player.removePotionEffect(PotionEffectType.SPEED);
+                            onlinePlayer.removePotionEffect(PotionEffectType.SPEED);
                             return true;
                         }
-                        return player.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
+                        return onlinePlayer.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
                     }
-                    this.message.onCommandApplyOnPlayerOff(sender);
                 }
             }
-
-            if (sender instanceof ConsoleCommandSender) {
-                for (Player onlinePlayer : player.getServer().getOnlinePlayers()) {
-                    if (onlinePlayer.isOnline() && onlinePlayer.getName().equals(args[0])) {
-                        if (args[1].equals("0")) {
-                            player.removePotionEffect(PotionEffectType.SPEED);
-                            return true;
-                        }
-                        return player.addPotionEffect(this.applySpeedEffect.execute(args[1], sender));
-                    }
-                    this.message.onCommandApplyOnPlayerOff(sender);
-                }
-            }
-
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException | NullPointerException e) {
             this.message.onCommandApplyError(sender);
         }
